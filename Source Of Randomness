@@ -23,16 +23,20 @@ But let's see how easy it is win.
 What happened?
 Attack computed the correct answer by simply copying the code that computes the random number.
 */
-
 contract GuessTheRandomNumber {
+    // Constructor to accept payable transactions.
     constructor() payable {}
 
+    // Function to allow players to make a guess.
     function guess(uint _guess) public {
+        // Generate a random number based on blockhash and timestamp.
         uint answer = uint(
             keccak256(abi.encodePacked(blockhash(block.number - 1), block.timestamp))
         );
 
+        // Check if the guess matches the generated random number.
         if (_guess == answer) {
+            // Transfer 1 ether to the player if their guess is correct.
             (bool sent, ) = msg.sender.call{value: 1 ether}("");
             require(sent, "Failed to send Ether");
         }
